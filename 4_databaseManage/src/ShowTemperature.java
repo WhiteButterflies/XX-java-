@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class ShowTemperature extends Thread{
-    private String url="jdbc:mysql://localhost:3306/java_exp?user=root&password=root&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8";
+    private String url="jdbc:mysql://localhost:3306/java_exp?user=liuqinghua&password=zxcvbnm&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8";
     private String sql;
     private PreparedStatement preparedStatement;
     private Connection connection;
@@ -16,9 +16,9 @@ public class ShowTemperature extends Thread{
             e.printStackTrace();
             return null;
         }
-        System.out.println("showTemperature........");
+        //System.out.println("showTemperature........");
         connection= (Connection) DriverManager.getConnection(url);
-        sql="select * from (select * from sample order by sample_time desc limit "+time+") temp order by sample_time";
+        sql="select * from sample order by sample_time desc limit "+time;
         preparedStatement= (PreparedStatement) connection.prepareStatement(sql);
         res=preparedStatement.executeQuery();
         Boolean bool=res.next();
@@ -31,7 +31,7 @@ public class ShowTemperature extends Thread{
         }
         preparedStatement.close();
         connection.close();
-        if(temperature!=null) {
+        if(temperature.size()==time) {
             return temperature;
         }
         else {
@@ -43,7 +43,7 @@ public class ShowTemperature extends Thread{
         double result=0;
         ArrayList<Double> results=getTemperatureByTime(6);
         if(results==null){
-            System.out.println("数据库记录不足六条,无法提取");
+            System.out.println("数据库记录不足六条,无法提取平均温度");
             return -2;
         }
         for (double data:results){
